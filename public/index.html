@@ -1,0 +1,284 @@
+<!-- FILE: public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koynei — Modern Recruiting Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0c0a;--bg2:#111009;--surface:#191714;--surface2:#201e1a;--surface3:#272420;
+  --border:#2b2926;--border-light:#3a3733;
+  --text:#f0ede6;--text-muted:#8c8a83;--text-faint:#4a4845;
+  --accent:#e8b84b;--accent-hover:#d4a43c;--accent-dim:#e8b84b18;
+  --green:#22c55e;--red:#ef4444;--red-bg:#2d0a0a;
+  --radius:12px;--radius-sm:8px;
+  --font:'DM Sans',sans-serif;--font-display:'DM Serif Display',serif;
+  --trans:0.18s cubic-bezier(0.4,0,0.2,1);
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+.page{display:grid;grid-template-columns:1fr 460px;min-height:100vh}
+@media(max-width:880px){.page{grid-template-columns:1fr}}
+
+/* HERO */
+.hero-panel{position:relative;padding:48px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.hero-panel::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 25% 35%,rgba(232,184,75,0.08) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 75% 75%,rgba(34,197,94,0.05) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(ellipse 70% 70% at 20% 30%,black 20%,transparent 75%)}
+.logo-wrap{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.logo-mark{width:36px;height:36px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;color:var(--bg);line-height:1;flex-shrink:0}
+.logo-name{font-weight:600;font-size:15px}
+.hero-body{position:relative;z-index:1;padding:60px 0}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,184,75,0.12);border:1px solid rgba(232,184,75,0.2);color:var(--accent);font-size:12.5px;font-weight:500;padding:5px 14px;border-radius:20px;margin-bottom:28px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+h1{font-family:var(--font-display);font-size:clamp(36px,3.8vw,56px);font-weight:400;line-height:1.06;margin-bottom:20px;letter-spacing:-.5px}
+h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{color:var(--text-muted);font-size:15.5px;line-height:1.7;max-width:400px;margin-bottom:44px}
+.feats{display:flex;flex-direction:column;gap:16px}
+.feat{display:flex;align-items:flex-start;gap:13px}
+.feat-icon{width:34px;height:34px;background:var(--surface2);border:1px solid var(--border-light);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.feat strong{display:block;font-size:13.5px;color:var(--text);margin-bottom:2px}
+.feat p{font-size:13px;color:var(--text-muted);line-height:1.55}
+.hero-foot{position:relative;z-index:1}
+.quote-card{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius);padding:20px}
+.quote-card p{font-size:13.5px;color:var(--text-muted);line-height:1.65;margin-bottom:14px;font-style:italic}
+.q-author{display:flex;align-items:center;gap:10px}
+.q-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#22c55e);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg)}
+.q-info strong{display:block;font-size:13px}
+.q-info span{font-size:12px;color:var(--text-muted)}
+@media(max-width:880px){.hero-panel{display:none}}
+
+/* AUTH PANEL */
+.auth-panel{background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;padding:52px 44px;overflow-y:auto}
+@media(max-width:880px){.auth-panel{padding:36px 24px;border:none;background:var(--bg)}}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;margin-bottom:32px}
+.tab{flex:1;padding:9px;text-align:center;font-size:13.5px;font-weight:500;border-radius:6px;cursor:pointer;transition:var(--trans);color:var(--text-muted);border:none;background:none}
+.tab.active{background:var(--surface2);color:var(--text);border:1px solid var(--border-light)}
+.auth-title{font-family:var(--font-display);font-size:26px;margin-bottom:6px;font-weight:400}
+.auth-sub{color:var(--text-muted);font-size:13.5px;margin-bottom:28px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
+.role-btn{padding:15px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:var(--trans);text-align:center;background:var(--surface)}
+.role-btn:hover{border-color:var(--border-light)}
+.role-btn.active{border-color:var(--accent);background:var(--accent-dim)}
+.role-icon{font-size:22px;margin-bottom:6px}
+.role-label{font-size:13px;font-weight:600;color:var(--text);display:block}
+.role-desc{font-size:11.5px;color:var(--text-muted);margin-top:2px}
+.role-btn.active .role-label{color:var(--accent)}
+.sec{display:none}.sec.on{display:block}
+.frow{margin-bottom:16px}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:460px){.frow2{grid-template-columns:1fr}}
+label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+input,select{width:100%;padding:10px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);font:14px/1.5 var(--font);color:var(--text);outline:none;transition:var(--trans)}
+input::placeholder{color:var(--text-faint)}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+select{appearance:none;padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c8a83' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:var(--surface)}
+select option{background:var(--surface)}
+.err{color:#f87171;font-size:13px;margin-top:8px;padding:10px 13px;background:var(--red-bg);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-sm);display:none}
+.err.on{display:block}
+.btn-p{width:100%;padding:12px;background:var(--accent);color:var(--bg);border:none;border-radius:var(--radius-sm);font:600 14.5px/1 var(--font);cursor:pointer;transition:var(--trans);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.btn-p:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-g{width:100%;padding:12px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);font:500 14px/1 var(--font);cursor:pointer;transition:var(--trans);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;text-decoration:none}
+.btn-g:hover{background:var(--surface2)}
+.spin{width:16px;height:16px;border:2px solid rgba(13,12,10,.3);border-top-color:var(--bg);border-radius:50%;animation:spin .7s linear infinite;display:none}
+.loading .spin{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text-faint);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.switch{text-align:center;font-size:13.5px;color:var(--text-muted);margin-top:18px}
+.switch a{color:var(--accent);cursor:pointer;font-weight:500}
+.switch a:hover{text-decoration:underline}
+.mob-logo{display:none;align-items:center;gap:10px;padding:18px 24px;border-bottom:1px solid var(--border)}
+@media(max-width:880px){.mob-logo{display:flex}}
+</style>
+<style>
+html[data-theme="light"] {
+  --bg:#f7f6f2;--bg2:#f0efe9;--surface:#ffffff;--surface2:#f4f3ee;--surface3:#eceae3;
+  --border:#e0ddd5;--border-light:#ccc9c0;
+  --text:#1a1915;--text-muted:#6b6960;--text-faint:#a8a69f;
+  --accent:#b08a00;--accent-hover:#9a7900;--accent-dim:#b08a0014;
+  --green:#16a34a;--green-bg:#dcfce7;--green-text:#15803d;
+  --blue:#1d4ed8;--blue-bg:#dbeafe;--blue-text:#1e40af;
+  --purple:#7c3aed;--purple-bg:#ede9fe;--purple-text:#6d28d9;
+  --orange:#c2410c;--orange-bg:#ffedd5;--orange-text:#c2410c;
+  --red:#dc2626;--red-bg:#fee2e2;--red-text:#b91c1c;
+  --gold:#b08a00;--gold-bg:#fef3c7;--gold-text:#92400e;
+  --shadow:0 1px 4px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.04);
+}
+html[data-theme="light"] body { background: var(--bg); color: var(--text); }
+html[data-theme="light"] select option { background: var(--surface); color: var(--text); }
+
+/* THEME TOGGLE BUTTON */
+.theme-toggle {
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text-muted);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;transition:var(--trans);flex-shrink:0;
+}
+.theme-toggle:hover{background:var(--surface3);color:var(--text);border-color:var(--border-light)}
+</style>
+<script src="/theme.js"></script>
+</head>
+<body>
+
+<div class="mob-logo" style="justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:10px"><svg width="32" height="32" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block">
+  <rect width="200" height="200" rx="38" fill="#e8b84b"/>
+  <circle cx="72"  cy="48"  r="16" fill="#111"/>
+  <circle cx="72"  cy="84"  r="16" fill="#111"/>
+  <circle cx="72"  cy="120" r="16" fill="#111"/>
+  <circle cx="72"  cy="156" r="16" fill="#111"/>
+  <circle cx="108" cy="84"  r="16" fill="#111"/>
+  <circle cx="108" cy="120" r="16" fill="#111"/>
+  <circle cx="144" cy="48"  r="16" fill="#111"/>
+  <circle cx="144" cy="156" r="16" fill="#111"/>
+</svg><span class="logo-name">Koynei</span></div>
+  <button class="theme-toggle" data-theme-btn onclick="NTTheme.toggle()">☀</button>
+</div>
+
+<div class="page">
+  <div class="hero-panel">
+    <div class="hero-grid"></div>
+    <div class="logo-wrap">
+      <svg width="32" height="32" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block">
+  <rect width="200" height="200" rx="38" fill="#e8b84b"/>
+  <circle cx="72"  cy="48"  r="16" fill="#111"/>
+  <circle cx="72"  cy="84"  r="16" fill="#111"/>
+  <circle cx="72"  cy="120" r="16" fill="#111"/>
+  <circle cx="72"  cy="156" r="16" fill="#111"/>
+  <circle cx="108" cy="84"  r="16" fill="#111"/>
+  <circle cx="108" cy="120" r="16" fill="#111"/>
+  <circle cx="144" cy="48"  r="16" fill="#111"/>
+  <circle cx="144" cy="156" r="16" fill="#111"/>
+</svg>
+      <span class="logo-name">Koynei</span>
+    </div>
+    <button class="theme-toggle" data-theme-btn onclick="NTTheme.toggle()" style="margin-left:auto">☀</button>
+    <div class="hero-body">
+      <div class="badge"><span class="dot"></span>Trusted by 500+ hiring teams</div>
+      <h1>Hire <em>smarter</em>,<br>grow <em>faster</em></h1>
+      <p class="hero-sub">The all-in-one recruiting platform for ambitious teams. Post jobs, manage pipelines, and find the right people — in one place.</p>
+      <div class="feats">
+        <div class="feat"><div class="feat-icon">🎯</div><div><strong>Branded job board</strong><p>Publish roles instantly with filters for department, location, and type.</p></div></div>
+        <div class="feat"><div class="feat-icon">📊</div><div><strong>Pipeline management</strong><p>Move candidates through stages — Applied → Reviewing → Interviewing → Hired.</p></div></div>
+        <div class="feat"><div class="feat-icon">⚡</div><div><strong>One-click applications</strong><p>Candidates apply in seconds with resume auto-attached.</p></div></div>
+      </div>
+    </div>
+    <div class="hero-foot">
+      <div class="quote-card">
+        <p>"Koynei cut our time-to-hire by 40%. The pipeline view is the best in the business."</p>
+        <div class="q-author">
+          <div class="q-av">SR</div>
+          <div class="q-info"><strong>Sarah R.</strong><span>Head of Talent · Acme Corp</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-panel">
+    <!-- LOGIN -->
+    <div id="s-login" class="sec on">
+      <div class="tabs">
+        <button class="tab active" onclick="go('login')">Sign In</button>
+        <button class="tab" onclick="go('register')">Create Account</button>
+      </div>
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to your Koynei account</div>
+      <form onsubmit="doLogin(event)">
+        <div class="frow"><label>Email</label><input type="email" id="l-email" placeholder="you@company.com" required></div>
+        <div class="frow"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••" required></div>
+        <div class="err" id="l-err"></div>
+        <button class="btn-p" type="submit" id="l-btn"><span class="spin"></span>Sign in →</button>
+      </form>
+      <div class="divider">or</div>
+      <a class="btn-g" href="/applicant/browse.html">Browse jobs without an account</a>
+      <div class="switch">No account? <a onclick="go('register')">Create one free</a></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="s-reg" class="sec">
+      <div class="tabs">
+        <button class="tab" onclick="go('login')">Sign In</button>
+        <button class="tab active" onclick="go('register')">Create Account</button>
+      </div>
+      <div class="auth-title">Get started free</div>
+      <div class="auth-sub">Choose how you'll use Koynei</div>
+      <div class="role-grid">
+        <div class="role-btn active" onclick="setRole('company')" id="r-co"><div class="role-icon">🏢</div><span class="role-label">I'm Hiring</span><div class="role-desc">Post jobs & manage candidates</div></div>
+        <div class="role-btn" onclick="setRole('applicant')" id="r-ap"><div class="role-icon">👤</div><span class="role-label">I'm Job Seeking</span><div class="role-desc">Find & apply to roles</div></div>
+      </div>
+      <form onsubmit="doReg(event)">
+        <div class="frow2" style="margin-bottom:16px">
+          <div class="frow"><label>Full Name</label><input type="text" id="r-name" placeholder="Jane Doe" required></div>
+          <div class="frow"><label>Email</label><input type="email" id="r-email" placeholder="jane@co.com" required></div>
+        </div>
+        <div class="frow"><label>Password</label><input type="password" id="r-pass" placeholder="Min 8 characters" required minlength="8"></div>
+        <div id="co-fields">
+          <div class="frow2" style="margin-bottom:16px">
+            <div class="frow"><label>Company Name</label><input type="text" id="r-cname" placeholder="Acme Corp"></div>
+            <div class="frow"><label>Headquarters</label><input type="text" id="r-cloc" placeholder="San Francisco, CA"></div>
+          </div>
+          <div class="frow"><label>Website</label><input type="url" id="r-cweb" placeholder="https://acme.com"></div>
+        </div>
+        <div class="err" id="r-err"></div>
+        <button class="btn-p" type="submit" id="r-btn"><span class="spin"></span>Create account →</button>
+      </form>
+      <div class="switch">Already have an account? <a onclick="go('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let selRole = 'company';
+function go(t) {
+  ['s-login','s-reg'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',(t==='login'&&i===0)||(t==='register'&&i===1)));
+  document.querySelectorAll('.tabs .tab').forEach((b,i)=>b.classList.toggle('active',(t==='login'&&i===0)||(t==='register'&&i===1)));
+}
+function setRole(r) {
+  selRole=r;
+  document.getElementById('r-co').classList.toggle('active',r==='company');
+  document.getElementById('r-ap').classList.toggle('active',r==='applicant');
+  document.getElementById('co-fields').style.display=r==='company'?'':'none';
+}
+function showErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.classList.add('on')}
+function hideErr(id){document.getElementById(id).classList.remove('on')}
+
+async function doLogin(e) {
+  e.preventDefault(); hideErr('l-err');
+  const btn=document.getElementById('l-btn'); btn.classList.add('loading'); btn.disabled=true;
+  try {
+    const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('l-email').value,password:document.getElementById('l-pass').value})});
+    const d=await r.json();
+    if(!r.ok){showErr('l-err',d.error||'Login failed');return}
+    localStorage.setItem('token',d.token);localStorage.setItem('user',JSON.stringify(d.user));localStorage.setItem('profile',JSON.stringify(d.profile));
+    location.href=d.user.role==='company'?'/company/dashboard.html':'/applicant/dashboard.html';
+  } catch{showErr('l-err','Connection error. Please try again.')}
+  finally{btn.classList.remove('loading');btn.disabled=false}
+}
+
+async function doReg(e) {
+  e.preventDefault(); hideErr('r-err');
+  const btn=document.getElementById('r-btn'); btn.classList.add('loading'); btn.disabled=true;
+  try {
+    const b={email:document.getElementById('r-email').value,password:document.getElementById('r-pass').value,name:document.getElementById('r-name').value,role:selRole,companyName:document.getElementById('r-cname')?.value,companyLocation:document.getElementById('r-cloc')?.value,website:document.getElementById('r-cweb')?.value};
+    const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+    const d=await r.json();
+    if(!r.ok){showErr('r-err',d.error||'Registration failed');return}
+    localStorage.setItem('token',d.token);localStorage.setItem('user',JSON.stringify(d.user));localStorage.setItem('profile',JSON.stringify(d.profile));
+    location.href=d.user.role==='company'?'/company/dashboard.html':'/applicant/dashboard.html';
+  } catch{showErr('r-err','Connection error. Please try again.')}
+  finally{btn.classList.remove('loading');btn.disabled=false}
+}
+
+const u=localStorage.getItem('token')?JSON.parse(localStorage.getItem('user')||'{}'):null;
+// Apply theme on load
+document.querySelectorAll('[data-theme-btn]').forEach(b=>{b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀':'☾'});
+if(u?.role) location.href=u.role==='company'?'/company/dashboard.html':'/applicant/dashboard.html';
+</script>
+</body>
+</html>

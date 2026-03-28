@@ -1,0 +1,47 @@
+{
+  "users": [
+    {
+      "id": "c40df6f9-87ca-49e3-93c9-175d2f014a77",
+      "email": "inder@aliciabots.com",
+      "passwordHash": "$2b$10$r4CVmnY3zMIVZ9uy.c.ULetNAUA61ntyjkm.yny9hSqVC.Fo5MjQa",
+      "role": "company",
+      "name": "Inder Mukhopadhyay",
+      "createdAt": "2026-03-28T00:28:26.131Z"
+    },
+    {
+      "id": "a46a7368-9876-4efe-80e1-46aa0ec2ba71",
+      "email": "inder2655@gmail.com",
+      "passwordHash": "$2b$10$taSXNAgUsGcwBcBnz7K0beDO8cAEawhqEvI4rxGgXZ17VldKXKcba",
+      "role": "applicant",
+      "name": "Inder M",
+      "createdAt": "2026-03-28T00:29:50.454Z"
+    }
+  ],
+  "companies": [
+    {
+      "id": "99db9048-9b02-401c-bd21-2d78767e8429",
+      "userId": "c40df6f9-87ca-49e3-93c9-175d2f014a77",
+      "name": "Alicia Bots",
+      "website": "https://www.aliciabots.com",
+      "location": "Singapore",
+      "description": "",
+      "logo": "",
+      "createdAt": "2026-03-28T00:28:26.132Z"
+    }
+  ],
+  "applicants": [
+    {
+      "id": "5947394b-0f80-4a9c-9afb-85dd0722c98b",
+      "userId": "a46a7368-9876-4efe-80e1-46aa0ec2ba71",
+      "fullName": "Inder M",
+      "phone": "",
+      "linkedin": "",
+      "resume": "/uploads/18815524-3ec9-45cc-b927-af9a0d8730d6.pdf",
+      "bio": "",
+      "createdAt": "2026-03-28T00:29:50.455Z",
+      "resumeName": "Resume Sachin Kumar.pdf"
+    }
+  ],
+  "jobs": [],
+  "applications": []
+}

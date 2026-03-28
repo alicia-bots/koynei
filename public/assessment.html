@@ -1,0 +1,554 @@
+<!-- FILE: public/assessment.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment — Koynei</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="/theme.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0c0a;--bg2:#111009;--surface:#191714;--surface2:#201e1a;--surface3:#272420;
+  --border:#2b2926;--border-light:#3a3733;
+  --text:#f0ede6;--text-muted:#8c8a83;--text-faint:#4a4845;
+  --accent:#e8b84b;--accent-hover:#d4a43c;--accent-dim:#e8b84b18;
+  --green:#22c55e;--green-bg:#052e16;--green-text:#4ade80;
+  --blue:#3b82f6;--blue-bg:#0f1d35;--blue-text:#60a5fa;
+  --purple:#a855f7;--purple-bg:#1e0d35;--purple-text:#c084fc;
+  --orange:#f97316;--orange-bg:#2d1505;--orange-text:#fb923c;
+  --red:#ef4444;--red-bg:#2d0a0a;--red-text:#f87171;
+  --radius:14px;--radius-sm:9px;
+  --font:'DM Sans',sans-serif;--font-display:'DM Serif Display',serif;
+  --shadow-md:0 8px 32px rgba(0,0,0,.6);--trans:.2s cubic-bezier(.4,0,.2,1);
+}
+html[data-theme="light"]{
+  --bg:#f7f6f2;--bg2:#f0efe9;--surface:#fff;--surface2:#f4f3ee;--surface3:#eceae3;
+  --border:#e0ddd5;--border-light:#ccc9c0;
+  --text:#1a1915;--text-muted:#6b6960;--text-faint:#a8a69f;
+  --accent:#b08a00;--accent-hover:#9a7900;--accent-dim:#b08a0014;
+  --green-bg:#dcfce7;--green-text:#15803d;
+  --blue-bg:#dbeafe;--blue-text:#1e40af;
+  --purple-bg:#ede9fe;--purple-text:#6d28d9;
+  --orange-bg:#ffedd5;--orange-text:#c2410c;
+  --shadow-md:0 4px 20px rgba(0,0,0,.1);
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;border-bottom:1px solid var(--border);background:var(--bg)}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px}
+.logo-mark{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:15px;color:#0d0c0a;line-height:1}
+html[data-theme="light"] .logo-mark{color:#fff}
+.nav-r{display:flex;align-items:center;gap:10px}
+.timer{font-size:13px;font-weight:600;color:var(--text-muted);background:var(--surface2);padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-variant-numeric:tabular-nums}
+.timer.warn{color:var(--orange-text);background:var(--orange-bg);border-color:rgba(249,115,22,.3)}
+.timer.urgent{color:var(--red-text);background:var(--red-bg);border-color:rgba(239,68,68,.3);animation:timerPulse 1s ease infinite}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.6}}
+.theme-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans)}
+.theme-btn:hover{background:var(--surface3);color:var(--text)}
+
+/* SCREENS */
+.screen{display:none;min-height:calc(100vh - 56px)}
+.screen.on{display:flex;flex-direction:column}
+
+/* ── INTRO SCREEN ── */
+#screen-intro{align-items:center;justify-content:center;padding:40px 24px}
+.intro-card{max-width:580px;width:100%;text-align:center}
+.intro-badge{display:inline-flex;align-items:center;gap:7px;background:var(--accent-dim);border:1px solid rgba(232,184,75,.25);color:var(--accent);font-size:12.5px;font-weight:500;padding:5px 14px;border-radius:20px;margin-bottom:24px}
+html[data-theme="light"] .intro-badge{background:rgba(176,138,0,.1);border-color:rgba(176,138,0,.25)}
+.intro-type-badge{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:20px}
+.intro-card h1{font-family:var(--font-display);font-size:clamp(28px,5vw,42px);font-weight:400;line-height:1.1;margin-bottom:14px}
+.intro-card p{font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:28px;max-width:440px;margin-left:auto;margin-right:auto}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+.info-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 12px;text-align:center}
+.info-icon{font-size:22px;margin-bottom:6px}
+.info-val{font-size:16px;font-weight:600;margin-bottom:3px}
+.info-lbl{font-size:11.5px;color:var(--text-muted)}
+.instructions{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;text-align:left;margin-bottom:28px}
+.instructions h3{font-size:13.5px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.instructions ul{padding-left:18px}
+.instructions li{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:6px}
+.btn-start{width:100%;padding:14px;background:var(--accent);color:#0d0c0a;font:700 15px/1 var(--font);border:none;border-radius:var(--radius-sm);cursor:pointer;transition:var(--trans)}
+.btn-start:hover{background:var(--accent-hover);transform:translateY(-1px)}
+html[data-theme="light"] .btn-start{color:#fff}
+
+/* ── QUIZ SCREEN ── */
+#screen-quiz{max-width:700px;margin:0 auto;padding:28px 24px;flex:1}
+.progress-wrap{margin-bottom:28px}
+.progress-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.progress-label{font-size:12.5px;font-weight:500;color:var(--text-muted)}
+.progress-count{font-size:12.5px;color:var(--text-faint)}
+.progress-bar{height:5px;background:var(--border);border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:10px;transition:width .4s ease}
+
+/* Section marker */
+.q-section{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:20px;margin-bottom:16px}
+
+/* Question card */
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px;transition:var(--trans)}
+.q-num{font-size:11.5px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.q-text{font-size:17px;line-height:1.6;font-weight:400;margin-bottom:0}
+
+/* Options */
+.options-grid{display:flex;flex-direction:column;gap:9px}
+.option{
+  display:flex;align-items:center;gap:13px;padding:13px 16px;
+  background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  cursor:pointer;transition:var(--trans);user-select:none;
+}
+.option:hover{border-color:var(--border-light);background:var(--surface3)}
+.option.selected{border-color:var(--accent);background:var(--accent-dim)}
+.opt-bullet{
+  width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border-light);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--trans);
+  font-size:11px;font-weight:700;color:var(--text-faint);
+}
+.option.selected .opt-bullet{background:var(--accent);border-color:var(--accent);color:#0d0c0a}
+html[data-theme="light"] .option.selected .opt-bullet{color:#fff}
+.opt-text{font-size:14px;color:var(--text-muted);transition:var(--trans)}
+.option.selected .opt-text{color:var(--text);font-weight:500}
+
+/* Scale labels */
+.scale-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-top:4px;padding:0 2px}
+
+/* Nav buttons */
+.q-nav{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.btn{padding:10px 20px;border-radius:var(--radius-sm);font:500 13.5px/1 var(--font);cursor:pointer;transition:var(--trans);border:none;display:inline-flex;align-items:center;gap:7px}
+.btn-prev{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}.btn-prev:hover{background:var(--surface3);color:var(--text)}
+.btn-prev:disabled{opacity:.3;cursor:not-allowed}
+.btn-next{background:var(--accent);color:#0d0c0a;font-weight:600}.btn-next:hover{background:var(--accent-hover)}
+.btn-next:disabled{opacity:.4;cursor:not-allowed}
+html[data-theme="light"] .btn-next{color:#fff}
+
+/* ── RESULTS SCREEN ── */
+#screen-results{padding:36px 24px;max-width:820px;margin:0 auto}
+.results-hero{text-align:center;margin-bottom:36px}
+.results-hero h1{font-family:var(--font-display);font-size:36px;font-weight:400;margin-bottom:10px}
+.results-hero p{font-size:15px;color:var(--text-muted);line-height:1.7;max-width:500px;margin:0 auto}
+.trait-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:28px}
+.trait-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.trait-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.trait-name{font-size:14px;font-weight:600}
+.trait-score-badge{font-size:13px;font-weight:700;padding:3px 10px;border-radius:20px}
+.score-vh{background:var(--green-bg);color:var(--green-text)}
+.score-h{background:var(--blue-bg);color:var(--blue-text)}
+.score-m{background:var(--surface2);color:var(--text-muted)}
+.score-l{background:var(--orange-bg);color:var(--orange-text)}
+.score-vl{background:var(--red-bg);color:var(--red-text)}
+.trait-bar{height:8px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.trait-fill{height:100%;border-radius:10px;transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+.trait-desc{font-size:13px;color:var(--text-muted);line-height:1.65}
+.results-spinner{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px}
+.results-spinner .spin{width:40px;height:40px;border:3px solid var(--border-light);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-report{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.ai-report-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-faint);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ai-report-summary{font-size:15px;color:var(--text);line-height:1.75;margin-bottom:18px}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.strength-tag{padding:4px 12px;background:var(--green-bg);color:var(--green-text);border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid rgba(34,197,94,.2)}
+.dev-tag{padding:4px 12px;background:var(--orange-bg);color:var(--orange-text);border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid rgba(249,115,22,.2)}
+.role-tag{padding:4px 12px;background:var(--blue-bg);color:var(--blue-text);border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid rgba(59,130,246,.2)}
+.section-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-faint);margin:14px 0 8px}
+.work-style-text{font-size:14px;color:var(--text-muted);line-height:1.75;background:var(--surface2);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border)}
+.done-cta{text-align:center;padding:28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.done-cta h3{font-family:var(--font-display);font-size:22px;font-weight:400;margin-bottom:8px}
+.done-cta p{font-size:14px;color:var(--text-muted);line-height:1.65;margin-bottom:18px}
+.btn-home{padding:12px 28px;background:var(--accent);color:#0d0c0a;font:600 14px/1 var(--font);border:none;border-radius:var(--radius-sm);cursor:pointer;transition:var(--trans);text-decoration:none;display:inline-flex}
+.btn-home:hover{background:var(--accent-hover)}
+html[data-theme="light"] .btn-home{color:#fff}
+
+/* ── ERROR / EXPIRED ── */
+#screen-error{align-items:center;justify-content:center;text-align:center;padding:40px}
+#screen-error .emoji{font-size:52px;margin-bottom:18px}
+#screen-error h2{font-family:var(--font-display);font-size:28px;font-weight:400;margin-bottom:10px}
+#screen-error p{font-size:15px;color:var(--text-muted);line-height:1.7;max-width:400px}
+
+/* TYPE COLOURS */
+.type-big5     {background:rgba(168,85,247,.15);color:var(--purple-text);border-color:rgba(168,85,247,.25)}
+.type-eq       {background:rgba(232,184,75,.12);color:var(--accent);border-color:rgba(232,184,75,.25)}
+.type-cognitive{background:rgba(59,130,246,.12);color:var(--blue-text);border-color:rgba(59,130,246,.25)}
+.type-custom   {background:rgba(34,197,94,.1);color:var(--green-text);border-color:rgba(34,197,94,.2)}
+html[data-theme="light"] .type-eq{background:rgba(176,138,0,.1);color:var(--accent);border-color:rgba(176,138,0,.25)}
+
+/* trait fill colours */
+.fill-openness       {background:#a855f7}
+.fill-conscientiousness{background:#3b82f6}
+.fill-extraversion   {background:#f97316}
+.fill-agreeableness  {background:#22c55e}
+.fill-neuroticism    {background:#ef4444}
+.fill-self-awareness {background:#e8b84b}
+.fill-self-regulation{background:#3b82f6}
+.fill-motivation     {background:#22c55e}
+.fill-empathy        {background:#a855f7}
+.fill-social-skills  {background:#f97316}
+.fill-analytical-thinking {background:#3b82f6}
+.fill-creative-thinking   {background:#a855f7}
+.fill-critical-thinking   {background:#22c55e}
+.fill-decision-making     {background:#e8b84b}
+.fill-learning-agility    {background:#f97316}
+.fill-default        {background:var(--accent)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><svg width="32" height="32" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block">
+  <rect width="200" height="200" rx="38" fill="#e8b84b"/>
+  <circle cx="72"  cy="48"  r="16" fill="#111"/>
+  <circle cx="72"  cy="84"  r="16" fill="#111"/>
+  <circle cx="72"  cy="120" r="16" fill="#111"/>
+  <circle cx="72"  cy="156" r="16" fill="#111"/>
+  <circle cx="108" cy="84"  r="16" fill="#111"/>
+  <circle cx="108" cy="120" r="16" fill="#111"/>
+  <circle cx="144" cy="48"  r="16" fill="#111"/>
+  <circle cx="144" cy="156" r="16" fill="#111"/>
+</svg>Koynei Assessment</div>
+  <div class="nav-r">
+    <div class="timer" id="timer" style="display:none">20:00</div>
+    <button class="theme-btn" data-theme-btn onclick="NTTheme.toggle()">☀️</button>
+  </div>
+</nav>
+
+<!-- ERROR -->
+<div class="screen" id="screen-error">
+  <div class="emoji" id="err-icon">🔗</div>
+  <h2 id="err-title">Invalid Link</h2>
+  <p id="err-msg">This assessment link is invalid or has expired. Please contact the company that sent you this link.</p>
+</div>
+
+<!-- INTRO -->
+<div class="screen" id="screen-intro">
+  <div class="intro-card">
+    <div class="intro-badge">📋 You have been invited to complete an assessment</div>
+    <div class="intro-type-badge" id="type-badge">—</div>
+    <h1 id="intro-title">Loading…</h1>
+    <p id="intro-desc">—</p>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-icon">❓</div><div class="info-val" id="info-qs">—</div><div class="info-lbl">Questions</div></div>
+      <div class="info-item"><div class="info-icon">⏱</div><div class="info-val" id="info-time">—</div><div class="info-lbl">Minutes</div></div>
+      <div class="info-item"><div class="info-icon">🎯</div><div class="info-val" id="info-traits">—</div><div class="info-lbl">Traits Measured</div></div>
+    </div>
+    <div class="instructions">
+      <h3>📌 Before you begin</h3>
+      <ul>
+        <li>Find a quiet place where you won't be interrupted.</li>
+        <li>There are <strong>no right or wrong answers</strong> — answer honestly based on how you <em>actually</em> are, not how you'd like to be.</li>
+        <li>Go with your first instinct. Don't overthink each question.</li>
+        <li>The timer begins when you click Start. You can navigate back to previous questions.</li>
+        <li>Your results will be shared with the hiring team alongside your application.</li>
+      </ul>
+    </div>
+    <button class="btn-start" onclick="startAssessment()">Start Assessment →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="screen-quiz">
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label" id="section-label">—</span>
+      <span class="progress-count" id="q-count">1 of 25</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="q-section" id="q-section-badge"></div>
+  <div class="q-card">
+    <div class="q-num" id="q-num">Question 1</div>
+    <div class="q-text" id="q-text">Loading…</div>
+  </div>
+  <div class="options-grid" id="options-grid"></div>
+  <div class="scale-labels" id="scale-labels"></div>
+  <div class="q-nav" style="margin-top:16px">
+    <button class="btn btn-prev" id="btn-prev" onclick="goQ(-1)" disabled>← Back</button>
+    <button class="btn btn-next" id="btn-next" onclick="goQ(1)">Next →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screen-results">
+  <div class="results-hero">
+    <div style="font-size:48px;margin-bottom:14px">🎉</div>
+    <h1>Assessment Complete!</h1>
+    <p>Great job. Here's a breakdown of your results. This report has been shared with the hiring team.</p>
+  </div>
+  <div id="results-content"></div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let token, assessment, invite, questions, answers = {}, currentQ = 0;
+let timerInterval, timeLeft;
+
+// Get token from URL: /assessment/TOKEN
+const urlParts = location.pathname.split('/');
+token = urlParts[urlParts.length - 1];
+
+const TYPE_META = {
+  big5:      { label: 'Big Five Personality', emoji: '🧠', colour: 'type-big5', desc: 'Measures your core personality dimensions: Openness, Conscientiousness, Extraversion, Agreeableness, and Emotional Stability.' },
+  eq:        { label: 'Emotional Intelligence', emoji: '💛', colour: 'type-eq', desc: 'Assesses your ability to recognise, understand, and manage emotions in yourself and others.' },
+  cognitive: { label: 'Cognitive Style', emoji: '⚡', colour: 'type-cognitive', desc: 'Explores your thinking patterns: analytical reasoning, creativity, critical thinking, and learning agility.' },
+  custom:    { label: 'Custom Assessment', emoji: '📋', colour: 'type-custom', desc: 'A tailored assessment designed by the company.' },
+};
+
+const TRAIT_COLOURS = {
+  'openness':'fill-openness','conscientiousness':'fill-conscientiousness',
+  'extraversion':'fill-extraversion','agreeableness':'fill-agreeableness','neuroticism':'fill-neuroticism',
+  'self-awareness':'fill-self-awareness','self-regulation':'fill-self-regulation',
+  'motivation':'fill-motivation','empathy':'fill-empathy','social skills':'fill-social-skills',
+  'analytical thinking':'fill-analytical-thinking','creative thinking':'fill-creative-thinking',
+  'critical thinking':'fill-critical-thinking','decision making':'fill-decision-making',
+  'learning agility':'fill-learning-agility',
+};
+
+function traitColour(name) {
+  return TRAIT_COLOURS[name.toLowerCase()] || 'fill-default';
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+async function boot() {
+  // Sync theme button
+  const tb = document.querySelector('[data-theme-btn]');
+  if (tb) tb.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+  if (window.NTTheme) {
+    const orig = NTTheme.toggle;
+    NTTheme.toggle = function() { orig(); const b=document.querySelector('[data-theme-btn]'); if(b) b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙'; };
+  }
+
+  if (!token || token === 'assessment') {
+    showError('🔗', 'No Assessment Link', 'No assessment token found in the URL. Please use the link provided by the company.');
+    return;
+  }
+
+  try {
+    const res  = await fetch(`/api/assessment/${token}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      const icons = { 'Invalid or expired link':'⏰', 'This assessment link has expired':'⏰' };
+      showError(icons[data.error]||'❌', data.error||'Error', 'Please contact the company that sent you this link.');
+      return;
+    }
+
+    if (data.alreadyCompleted) {
+      showResults(data); // show completed results
+      return;
+    }
+
+    invite     = data.invite;
+    assessment = data.assessment;
+    questions  = data.assessment.questions;
+
+    const meta = TYPE_META[assessment.type] || TYPE_META.custom;
+    const traits = [...new Set(questions.map(q => q.trait))];
+
+    document.getElementById('intro-title').textContent = assessment.title;
+    document.getElementById('intro-desc').textContent  = assessment.description || meta.desc;
+    document.getElementById('info-qs').textContent     = questions.length;
+    document.getElementById('info-time').textContent   = assessment.timeLimit;
+    document.getElementById('info-traits').textContent = traits.length;
+
+    const typeBadge = document.getElementById('type-badge');
+    typeBadge.textContent = meta.emoji + ' ' + meta.label;
+    typeBadge.classList.add(meta.colour);
+
+    showScreen('intro');
+  } catch(e) {
+    showError('⚠️', 'Connection Error', 'Could not load the assessment. Please check your connection and try again.');
+  }
+}
+
+function showError(icon, title, msg) {
+  document.getElementById('err-icon').textContent = icon;
+  document.getElementById('err-title').textContent = title;
+  document.getElementById('err-msg').textContent   = msg;
+  showScreen('error');
+}
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(`screen-${name}`).classList.add('on');
+}
+
+// ── START ──────────────────────────────────────────────────────────────────────
+async function startAssessment() {
+  await fetch(`/api/assessment/${token}/start`, { method: 'POST' });
+  timeLeft = assessment.timeLimit * 60;
+  startTimer();
+  currentQ = 0;
+  renderQ();
+  showScreen('quiz');
+}
+
+function startTimer() {
+  document.getElementById('timer').style.display = '';
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const el = document.getElementById('timer');
+    const m  = Math.floor(timeLeft / 60);
+    const s  = timeLeft % 60;
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className   = 'timer' + (timeLeft <= 60 ? ' urgent' : timeLeft <= 180 ? ' warn' : '');
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitAssessment(); }
+  }, 1000);
+}
+
+// ── RENDER QUESTION ───────────────────────────────────────────────────────────
+function renderQ() {
+  const q    = questions[currentQ];
+  const total = questions.length;
+  const pct  = Math.round((currentQ / total) * 100);
+
+  document.getElementById('q-num').textContent   = `Question ${currentQ + 1}`;
+  document.getElementById('q-text').textContent  = q.text;
+  document.getElementById('q-count').textContent = `${currentQ + 1} of ${total}`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  // Section badge
+  const sEl = document.getElementById('q-section-badge');
+  sEl.textContent = q.trait;
+  sEl.className   = 'q-section ' + (TYPE_META[assessment?.type]?.colour || 'type-custom');
+
+  // Prev/Next
+  document.getElementById('btn-prev').disabled = currentQ === 0;
+  const isLast = currentQ === total - 1;
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = isLast ? 'Submit Assessment ✓' : 'Next →';
+  nextBtn.style.background = isLast ? 'var(--green)' : '';
+  nextBtn.disabled = answers[q.id] === undefined;
+
+  // Options
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = q.options.map((opt, i) => `
+    <div class="option ${answers[q.id] === opt.value ? 'selected' : ''}" onclick="selectOpt(${opt.value}, '${q.id}')">
+      <div class="opt-bullet">${String.fromCharCode(65 + i)}</div>
+      <div class="opt-text">${opt.label}</div>
+    </div>`).join('');
+
+  // Scale labels (first and last label only)
+  const labels = document.getElementById('scale-labels');
+  if (q.options.length >= 2) {
+    labels.style.display = 'flex';
+    labels.innerHTML = `<span>${q.options[0].label}</span><span>${q.options[q.options.length-1].label}</span>`;
+  } else { labels.style.display = 'none'; }
+}
+
+function selectOpt(value, qId) {
+  answers[qId] = value;
+  renderQ();
+}
+
+function goQ(dir) {
+  const isLast = currentQ === questions.length - 1;
+  if (dir === 1 && isLast) { if (confirm('Submit your assessment? You cannot change answers after submitting.')) submitAssessment(); return; }
+  const next = currentQ + dir;
+  if (next < 0 || next >= questions.length) return;
+  currentQ = next;
+  renderQ();
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+async function submitAssessment() {
+  clearInterval(timerInterval);
+  showScreen('results');
+  document.getElementById('results-content').innerHTML = `
+    <div class="results-spinner">
+      <div class="spin"></div>
+      <div style="font-size:14.5px;font-weight:500">Scoring your responses…</div>
+      <div style="font-size:13px;color:var(--text-muted)">Generating your personalised report</div>
+    </div>`;
+
+  const answerArray = Object.entries(answers).map(([questionId, value]) => ({ questionId, value }));
+  try {
+    const res  = await fetch(`/api/assessment/${token}/submit`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers: answerArray }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    showResults({ invite: { ...invite, scores: data.scores, status: 'completed' }, assessment });
+  } catch(e) {
+    document.getElementById('results-content').innerHTML = `<div style="text-align:center;padding:40px;color:var(--red-text)">❌ Failed to submit: ${e.message}. Please refresh and try again.</div>`;
+  }
+}
+
+// ── SHOW RESULTS ──────────────────────────────────────────────────────────────
+function showResults(data) {
+  showScreen('results');
+  const scores  = data.invite?.scores || data.scores || {};
+  const aiReport= data.invite?.aiReport || data.aiReport;
+  const asmType = (data.assessment || assessment)?.type || 'big5';
+  const meta    = TYPE_META[asmType] || TYPE_META.custom;
+
+  function labelClass(score) {
+    if (score >= 80) return 'score-vh';
+    if (score >= 65) return 'score-h';
+    if (score >= 45) return 'score-m';
+    if (score >= 30) return 'score-l';
+    return 'score-vl';
+  }
+  function labelText(score) {
+    if (score >= 80) return 'Very High';
+    if (score >= 65) return 'High';
+    if (score >= 45) return 'Moderate';
+    if (score >= 30) return 'Low';
+    return 'Very Low';
+  }
+
+  // Build trait cards
+  const traitCards = Object.entries(scores).map(([trait, score]) => {
+    const cls   = labelClass(score);
+    const lbl   = labelText(score);
+    const fill  = traitColour(trait);
+    const desc  = aiReport?.traitProfiles?.find(t => t.trait === trait)?.description || '';
+    return `<div class="trait-card">
+      <div class="trait-header">
+        <span class="trait-name">${trait}</span>
+        <span class="trait-score-badge ${cls}">${lbl} · ${score}%</span>
+      </div>
+      <div class="trait-bar"><div class="trait-fill ${fill}" style="width:${score}%"></div></div>
+      ${desc ? `<div class="trait-desc">${desc}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  // AI report section
+  let reportHtml = '';
+  if (aiReport?.summary) {
+    reportHtml = `
+      <div class="ai-report">
+        <div class="ai-report-title">✨ AI-Generated Psychological Profile</div>
+        <div class="ai-report-summary">${aiReport.summary}</div>
+        ${aiReport.strengths?.length ? `<div class="section-lbl">Strengths</div><div class="tag-row">${aiReport.strengths.map(s=>`<span class="strength-tag">${s}</span>`).join('')}</div>` : ''}
+        ${aiReport.developmentAreas?.length ? `<div class="section-lbl">Development Areas</div><div class="tag-row">${aiReport.developmentAreas.map(d=>`<span class="dev-tag">${d}</span>`).join('')}</div>` : ''}
+        ${aiReport.workStyleSummary ? `<div class="section-lbl">Work Style</div><div class="work-style-text">${aiReport.workStyleSummary}</div>` : ''}
+        ${aiReport.recommendedFor?.length ? `<div class="section-lbl">Best Suited For</div><div class="tag-row">${aiReport.recommendedFor.map(r=>`<span class="role-tag">${r}</span>`).join('')}</div>` : ''}
+      </div>`;
+  } else if (data.invite?.status === 'completed') {
+    reportHtml = `<div class="ai-report" style="text-align:center;padding:24px">
+      <div style="font-size:13px;color:var(--text-muted)">Your AI report is being generated by the hiring team. Check back later.</div>
+    </div>`;
+  }
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="trait-grid">${traitCards}</div>
+    ${reportHtml}
+    <div class="done-cta">
+      <h3>All done! 🎯</h3>
+      <p>Your results have been submitted to the hiring team and will be reviewed alongside your application. You'll hear from them soon.</p>
+      <a href="/" class="btn-home">Go to Koynei →</a>
+    </div>`;
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.trait-fill').forEach(bar => {
+      const w = bar.style.width; bar.style.width='0'; setTimeout(()=>bar.style.width=w, 50);
+    });
+  }, 100);
+}
+
+boot();
+</script>
+</body>
+</html>

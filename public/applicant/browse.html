@@ -1,0 +1,388 @@
+<!-- FILE: public/applicant/browse.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Roles — Koynei</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="/theme.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── DARK THEME (default) ── */
+:root {
+  --bg:#0d0c0a; --bg2:#111009; --surface:#191714; --surface2:#201e1a; --surface3:#272420;
+  --border:#2b2926; --border-light:#3a3733;
+  --text:#f0ede6; --text-muted:#8c8a83; --text-faint:#4a4845;
+  --accent:#e8b84b; --accent-hover:#d4a43c; --accent-dim:#e8b84b18;
+  --green-text:#4ade80; --green-bg:#052e16;
+  --radius:12px; --radius-sm:8px;
+  --font:'DM Sans',sans-serif; --font-display:'DM Serif Display',serif;
+  --shadow-md:0 8px 32px rgba(0,0,0,0.6);
+  --trans:0.18s cubic-bezier(0.4,0,0.2,1);
+  --nav-bg:rgba(13,12,10,0.92);
+}
+
+/* ── LIGHT THEME ── */
+html[data-theme="light"] {
+  --bg:#f7f6f2; --bg2:#f0efe9; --surface:#ffffff; --surface2:#f4f3ee; --surface3:#eceae3;
+  --border:#e0ddd5; --border-light:#ccc9c0;
+  --text:#1a1915; --text-muted:#6b6960; --text-faint:#a8a69f;
+  --accent:#b08a00; --accent-hover:#9a7900; --accent-dim:#b08a0014;
+  --green-text:#15803d; --green-bg:#dcfce7;
+  --shadow-md:0 4px 20px rgba(0,0,0,0.1);
+  --nav-bg:rgba(247,246,242,0.94);
+}
+
+body { font-family:var(--font); background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; transition:background .2s,color .2s; }
+
+/* ── NAV ── */
+nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 32px; height:62px;
+  background:var(--nav-bg); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:100;
+}
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); font-weight:600; font-size:14.5px; }
+.logo-mark {
+  width:32px; height:32px; background:var(--accent); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:17px; color:#0d0c0a; line-height:1; flex-shrink:0;
+}
+.nav-right { display:flex; align-items:center; gap:8px; }
+
+/* Theme toggle */
+.theme-btn {
+  width:36px; height:36px; border-radius:var(--radius-sm);
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--text-muted); font-size:16px; line-height:1;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:var(--trans); flex-shrink:0;
+}
+.theme-btn:hover { background:var(--surface3); color:var(--text); border-color:var(--border-light); }
+
+/* Buttons */
+.btn { padding:8px 18px; border-radius:var(--radius-sm); font:500 13.5px/1 var(--font); cursor:pointer; transition:var(--trans); border:none; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+.btn-outline { background:none; border:1px solid var(--border); color:var(--text-muted); }
+.btn-outline:hover { color:var(--text); border-color:var(--border-light); background:var(--surface2); }
+.btn-fill { background:var(--accent); color:#0d0c0a; font-weight:600; }
+.btn-fill:hover { background:var(--accent-hover); transform:translateY(-1px); }
+html[data-theme="light"] .btn-fill { color:#fff; }
+
+/* ── HERO ── */
+.hero { max-width:660px; margin:0 auto; padding:64px 32px 40px; text-align:center; }
+.hero-badge {
+  display:inline-flex; align-items:center; gap:7px;
+  background:rgba(232,184,75,0.12); border:1px solid rgba(232,184,75,0.22);
+  color:var(--accent); font-size:12.5px; font-weight:500;
+  padding:5px 14px; border-radius:20px; margin-bottom:22px;
+}
+html[data-theme="light"] .hero-badge { background:rgba(176,138,0,0.1); border-color:rgba(176,138,0,0.25); }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+h1 { font-family:var(--font-display); font-size:clamp(34px,5vw,52px); font-weight:400; line-height:1.08; margin-bottom:14px; letter-spacing:-.5px; }
+h1 em { font-style:italic; color:var(--accent); }
+.hero-sub { color:var(--text-muted); font-size:15.5px; max-width:420px; margin:0 auto; line-height:1.7; }
+
+/* ── FILTERS ── */
+.filters { max-width:820px; margin:0 auto; padding:0 32px 20px; display:flex; gap:10px; flex-wrap:wrap; }
+.sw { flex:1; min-width:200px; position:relative; }
+.si { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-faint); font-size:15px; pointer-events:none; }
+.search-input {
+  width:100%; padding:10px 12px 10px 36px;
+  background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  font:14px var(--font); color:var(--text); outline:none; transition:var(--trans);
+}
+.search-input::placeholder { color:var(--text-faint); }
+.search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+.fsel {
+  padding:10px 28px 10px 12px;
+  background:var(--surface);
+  border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  font:13.5px var(--font); color:var(--text); outline:none; cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c8a83' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 10px center;
+  transition:var(--trans);
+}
+.fsel:focus { border-color:var(--accent); }
+.fsel option { background:var(--surface); color:var(--text); }
+
+/* ── JOBS ── */
+.main { max-width:820px; margin:0 auto; padding:0 32px 80px; }
+.count-bar { font-size:13px; color:var(--text-muted); margin-bottom:14px; }
+.jobs-list { display:flex; flex-direction:column; gap:9px; }
+.jcard {
+  background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius);
+  padding:20px 22px; cursor:pointer; transition:var(--trans);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.jcard:hover { border-color:var(--border-light); box-shadow:var(--shadow-md); transform:translateY(-1px); }
+.jcard-left { flex:1; min-width:0; }
+.co-row { display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+.co-logo {
+  width:28px; height:28px; background:var(--surface2); border:1px solid var(--border);
+  border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;
+}
+.co-name { font-size:12.5px; color:var(--text-muted); font-weight:500; }
+.j-title { font-size:15px; font-weight:600; margin-bottom:9px; }
+.j-tags { display:flex; gap:7px; flex-wrap:wrap; }
+.tag { font-size:12px; color:var(--text-muted); background:var(--surface2); padding:3px 9px; border-radius:20px; border:1px solid var(--border); }
+.tag-remote { background:#0f1d2b; color:#38bdf8; border-color:#1e3a52; }
+html[data-theme="light"] .tag-remote { background:#e0f2fe; color:#0369a1; border-color:#bae6fd; }
+.tag-new { background:#2a1f05; color:#fbbf24; border-color:#3a2a05; }
+html[data-theme="light"] .tag-new { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+.j-salary { font-size:13px; font-weight:600; color:var(--green-text); flex-shrink:0; white-space:nowrap; }
+.empty { text-align:center; padding:56px 20px; color:var(--text-muted); }
+.empty-icon { font-size:34px; margin-bottom:12px; }
+.empty h3 { font-size:15px; color:var(--text); margin-bottom:6px; }
+
+/* ── CTA ── */
+.cta {
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:28px 32px; margin-top:28px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  position:relative; overflow:hidden;
+}
+.cta::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 60% 80% at 10% 50%, rgba(232,184,75,0.07) 0%, transparent 70%);
+}
+html[data-theme="light"] .cta::before { background:radial-gradient(ellipse 60% 80% at 10% 50%, rgba(176,138,0,0.06) 0%, transparent 70%); }
+.cta h3 { font-family:var(--font-display); font-size:20px; font-weight:400; margin-bottom:4px; }
+.cta p { font-size:13.5px; color:var(--text-muted); }
+
+/* ── DETAIL PANEL ── */
+.overlay {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+  display:flex; justify-content:flex-end;
+  opacity:0; pointer-events:none; transition:opacity .22s;
+}
+.overlay.open { opacity:1; pointer-events:all; }
+.panel {
+  width:min(640px,100vw); height:100vh; overflow-y:auto;
+  background:var(--bg); border-left:1px solid var(--border);
+  box-shadow:var(--shadow-md);
+  transform:translateX(48px);
+  transition:transform .32s cubic-bezier(.16,1,.3,1);
+  display:flex; flex-direction:column;
+}
+html[data-theme="light"] .panel { background:var(--surface); }
+.overlay.open .panel { transform:translateX(0); }
+.panel-head {
+  position:sticky; top:0; z-index:5;
+  background:var(--bg); border-bottom:1px solid var(--border);
+  padding:16px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+html[data-theme="light"] .panel-head { background:var(--surface); }
+.xbtn { background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:18px; width:32px; height:32px; border-radius:6px; display:flex; align-items:center; justify-content:center; transition:var(--trans); }
+.xbtn:hover { background:var(--surface2); color:var(--text); }
+.panel-body { padding:30px 36px; flex:1; }
+.p-dept { font-size:11.5px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.p-title { font-family:var(--font-display); font-size:28px; line-height:1.1; margin-bottom:14px; }
+.p-sec { margin-bottom:24px; }
+.p-sec-title { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; padding-bottom:7px; border-bottom:1px solid var(--border); }
+.p-sec p { font-size:14px; color:var(--text-muted); line-height:1.75; }
+.p-sec ul { padding-left:18px; }
+.p-sec li { font-size:14px; color:var(--text-muted); line-height:1.75; margin-bottom:5px; }
+.panel-foot {
+  position:sticky; bottom:0;
+  background:var(--bg); border-top:1px solid var(--border);
+  padding:16px 36px; display:flex; gap:10px;
+}
+html[data-theme="light"] .panel-foot { background:var(--surface); }
+
+/* ── SIGNUP NUDGE ── */
+.signup-nudge {
+  background:var(--surface2); border:1px solid var(--border-light);
+  border-radius:var(--radius); padding:24px; text-align:center; margin-top:8px;
+}
+.signup-nudge p { font-size:13.5px; color:var(--text-muted); margin-bottom:14px; line-height:1.6; }
+
+@media(max-width:600px) {
+  nav { padding:0 16px; }
+  .hero { padding:40px 20px 28px; }
+  .filters, .main { padding-left:16px; padding-right:16px; }
+  .jcard { flex-direction:column; align-items:flex-start; gap:8px; }
+  .panel-body { padding:24px 20px; }
+  .panel-foot { padding:14px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <svg width="32" height="32" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block">
+  <rect width="200" height="200" rx="38" fill="#e8b84b"/>
+  <circle cx="72"  cy="48"  r="16" fill="#111"/>
+  <circle cx="72"  cy="84"  r="16" fill="#111"/>
+  <circle cx="72"  cy="120" r="16" fill="#111"/>
+  <circle cx="72"  cy="156" r="16" fill="#111"/>
+  <circle cx="108" cy="84"  r="16" fill="#111"/>
+  <circle cx="108" cy="120" r="16" fill="#111"/>
+  <circle cx="144" cy="48"  r="16" fill="#111"/>
+  <circle cx="144" cy="156" r="16" fill="#111"/>
+</svg>
+    Koynei
+  </a>
+  <div class="nav-right">
+    <button class="theme-btn" id="theme-btn" onclick="NTTheme.toggle()" title="Toggle theme">🌙</button>
+    <a href="/" class="btn btn-outline">Sign In</a>
+    <a href="/" class="btn btn-fill">Post Jobs →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge"><span class="dot"></span>Live opportunities</div>
+  <h1>Find your next<br><em>great role</em></h1>
+  <p class="hero-sub">Browse open positions from top companies. Create a free account to apply and track your applications.</p>
+</div>
+
+<div class="filters">
+  <div class="sw">
+    <span class="si">⌕</span>
+    <input type="text" class="search-input" id="q" placeholder="Search roles, companies…" oninput="load()">
+  </div>
+  <select class="fsel" id="f-dept" onchange="load()">
+    <option value="">All Departments</option>
+    <option>Engineering</option><option>Product</option><option>Design</option>
+    <option>Marketing</option><option>Sales</option><option>Operations</option>
+    <option>Finance</option><option>HR</option>
+  </select>
+  <select class="fsel" id="f-type" onchange="load()">
+    <option value="">All Types</option>
+    <option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option>
+  </select>
+</div>
+
+<div class="main">
+  <div class="count-bar" id="count-bar"></div>
+  <div class="jobs-list" id="jobs-list"></div>
+  <div class="cta">
+    <div>
+      <h3>Ready to apply?</h3>
+      <p>Create a free account to apply with one click and track your applications in real time.</p>
+    </div>
+    <a href="/" class="btn btn-fill" style="flex-shrink:0">Create Free Account →</a>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="overlay" id="panel-overlay" onclick="if(event.target===this)closePanel()">
+  <div class="panel">
+    <div class="panel-head">
+      <button class="xbtn" onclick="closePanel()">✕</button>
+      <a href="/" class="btn btn-fill" style="font-size:13px">Sign up to apply →</a>
+    </div>
+    <div class="panel-body" id="panel-body"></div>
+    <div class="panel-foot">
+      <a href="/" class="btn btn-fill" style="flex:1;justify-content:center">Create account &amp; apply →</a>
+      <button class="btn btn-outline" onclick="closePanel()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── THEME ICON sync ──
+function syncThemeBtn() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const btn = document.getElementById('theme-btn');
+  if (btn) { btn.textContent = isDark ? '☀️' : '🌙'; btn.title = isDark ? 'Switch to light' : 'Switch to dark'; }
+}
+// Override NTTheme.toggle to also sync button
+const _origToggle = window.NTTheme?.toggle;
+if (_origToggle) {
+  window.NTTheme.toggle = function() {
+    _origToggle();
+    syncThemeBtn();
+  };
+}
+syncThemeBtn();
+
+// ── LOAD JOBS ──
+async function load() {
+  const q    = document.getElementById('q').value;
+  const dept = document.getElementById('f-dept').value;
+  const type = document.getElementById('f-type').value;
+  let jobs = [];
+  try {
+    const res = await fetch('/api/jobs?' + new URLSearchParams({q, dept, type}));
+    jobs = await res.json();
+  } catch(e) { jobs = []; }
+
+  const countBar = document.getElementById('count-bar');
+  countBar.textContent = jobs.length + ' open role' + (jobs.length !== 1 ? 's' : '');
+
+  const el = document.getElementById('jobs-list');
+  if (!jobs.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>No roles found</h3><p>Try adjusting your filters.</p></div>';
+    return;
+  }
+
+  const isNew = d => (Date.now() - new Date(d)) < 7 * 24 * 3600 * 1000;
+  el.innerHTML = jobs.map((j, idx) => {
+    // Store job data as escaped JSON in data attribute
+    const encoded = encodeURIComponent(JSON.stringify(j));
+    return `<div class="jcard" onclick="openPanel('${encoded}')">
+      <div class="jcard-left">
+        <div class="co-row">
+          <div class="co-logo">${(j.company?.name?.[0] || '🏢')}</div>
+          <span class="co-name">${j.company?.name || 'Company'}</span>
+        </div>
+        <div class="j-title">${j.title}</div>
+        <div class="j-tags">
+          <span class="tag">📍 ${j.location}</span>
+          <span class="tag">${j.type}</span>
+          ${j.remote ? '<span class="tag tag-remote">🌏 Remote</span>' : ''}
+          ${isNew(j.createdAt) ? '<span class="tag tag-new">New</span>' : ''}
+        </div>
+      </div>
+      ${j.salary ? `<span class="j-salary">💰 ${j.salary}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── OPEN JOB PANEL ──
+function openPanel(encoded) {
+  const job = JSON.parse(decodeURIComponent(encoded));
+  const tags = [
+    `<span class="tag">📍 ${job.location}</span>`,
+    `<span class="tag">${job.type}</span>`,
+    `<span class="tag">📊 ${job.level || ''}</span>`,
+    job.remote ? '<span class="tag tag-remote">🌏 Remote</span>' : '',
+  ].filter(Boolean).join('');
+
+  document.getElementById('panel-body').innerHTML = `
+    <div class="p-dept">${job.company?.name || ''} · ${job.department || ''}</div>
+    <div class="p-title">${job.title}</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px">${tags}</div>
+    ${job.salary ? `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;margin-bottom:22px;font-size:13.5px">💰 <strong style="color:var(--green-text)">${job.salary}</strong></div>` : ''}
+    ${job.company?.description ? `<div class="p-sec"><div class="p-sec-title">About ${job.company.name}</div><p>${job.company.description}</p></div>` : ''}
+    ${job.description ? `<div class="p-sec"><div class="p-sec-title">About the Role</div><p>${job.description}</p></div>` : ''}
+    ${job.responsibilities?.length ? `<div class="p-sec"><div class="p-sec-title">Responsibilities</div><ul>${job.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul></div>` : ''}
+    ${job.requirements?.length ? `<div class="p-sec"><div class="p-sec-title">Requirements</div><ul>${job.requirements.map(r => `<li>${r}</li>`).join('')}</ul></div>` : ''}
+    ${job.niceToHave?.length ? `<div class="p-sec"><div class="p-sec-title">Nice to Have</div><ul>${job.niceToHave.map(r => `<li>${r}</li>`).join('')}</ul></div>` : ''}
+    <div class="signup-nudge">
+      <p>Create a free account to apply for this role and track your applications.</p>
+      <a href="/" class="btn btn-fill" style="display:inline-flex">Sign up &amp; apply →</a>
+    </div>`;
+
+  document.getElementById('panel-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePanel() {
+  document.getElementById('panel-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+load();
+</script>
+</body>
+</html>
