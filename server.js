@@ -19,6 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Explicit browse route — always serves the public job board, no auth needed
+app.get('/browse', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'applicant', 'browse.html'));
+});
+
 const uploadDir = path.join(__dirname, 'public/uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
