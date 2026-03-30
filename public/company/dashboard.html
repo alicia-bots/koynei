@@ -501,6 +501,22 @@ html[data-theme="light"] .asmt-eq{background:rgba(176,138,0,.1);border-color:rgb
         <div class="sc">
           <h3>Company Profile</h3>
           <p>Shown on all job listings and your careers page.</p>
+
+          <!-- LOGO UPLOAD -->
+          <div class="fg">
+            <label>Company Logo</label>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:4px">
+              <div id="logo-preview" style="width:64px;height:64px;border-radius:12px;background:var(--surface2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;flex-shrink:0">🏢</div>
+              <div style="flex:1">
+                <label style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:var(--surface2);border:1.5px solid var(--border-light);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text);transition:var(--trans);text-transform:none;letter-spacing:0;font-weight:500" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='var(--surface2)'">
+                  📁 Upload Logo
+                  <input type="file" accept="image/*" id="logo-input" style="display:none" onchange="uploadLogo(this)">
+                </label>
+                <div style="font-size:11.5px;color:var(--text-faint);margin-top:5px">PNG, JPG or SVG · Recommended 200×200px</div>
+              </div>
+            </div>
+          </div>
+
           <div class="fg"><label>Company Name</label><input class="fi" id="s-cname" placeholder="Acme Corp"></div>
           <div class="fg"><label>Location</label><input class="fi" id="s-cloc" placeholder="San Francisco, CA"></div>
           <div class="fg"><label>Website</label><input class="fi" id="s-cweb" placeholder="https://acme.com"></div>
@@ -781,6 +797,7 @@ async function init() {
   document.getElementById('s-email').value = USER.email || '';
   const sz = document.getElementById('s-size');
   [...sz.options].forEach(o => o.selected = o.value === p.size);
+  if (p.logo) setLogoPreview(p.logo);
   // Sync theme button
   const tb = document.querySelector('[data-theme-btn]');
   if (tb) tb.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
@@ -1364,8 +1381,38 @@ async function saveProfile() {
   const body = { name:document.getElementById('s-cname').value, location:document.getElementById('s-cloc').value, website:document.getElementById('s-cweb').value, description:document.getElementById('s-cdesc').value, industry:document.getElementById('s-ind').value, size:document.getElementById('s-size').value };
   const r = await api('/api/company/profile', { method:'PUT', body:JSON.stringify(body) });
   if (!r.ok) { toast('Failed','err'); return; }
-  localStorage.setItem('profile', JSON.stringify(await r.json()));
+  const saved = await r.json();
+  localStorage.setItem('profile', JSON.stringify(saved));
   toast('Profile saved!', 'ok');
+}
+
+async function uploadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const prev = document.getElementById('logo-preview');
+  prev.innerHTML = '<div style="font-size:11px;color:var(--text-muted)">Uploading…</div>';
+  const form = new FormData();
+  form.append('logo', file);
+  try {
+    const r = await fetch('/api/company/logo', { method:'POST', headers:{ Authorization:`Bearer ${TOKEN}` }, body:form });
+    if (!r.ok) throw new Error('Upload failed');
+    const d = await r.json();
+    setLogoPreview(d.logo);
+    const p = JSON.parse(localStorage.getItem('profile')||'{}');
+    p.logo = d.logo;
+    localStorage.setItem('profile', JSON.stringify(p));
+    toast('Logo updated! ✓', 'ok');
+  } catch(e) { prev.innerHTML = '🏢'; toast('Upload failed: '+e.message,'err'); }
+}
+
+function setLogoPreview(logoUrl) {
+  const prev = document.getElementById('logo-preview');
+  if (!prev) return;
+  if (logoUrl) {
+    prev.innerHTML = `<img src="${logoUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+  } else {
+    prev.innerHTML = '🏢';
+  }
 }
 
 // ── NAV ────────────────────────────────────────────────────────────────────────
