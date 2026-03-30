@@ -12,7 +12,7 @@ const DB        = require('./database');
 
 const app        = express();
 const PORT       = process.env.PORT       || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'novatalent-secret-2024';
+const JWT_SECRET = process.env.JWT_SECRET || 'koynei-secret-2024';
 
 app.use(cors());
 app.use(express.json());
@@ -820,16 +820,33 @@ app.get('/api/applicant/assessments', auth, app_, async (req, res) => {
 // ── SPA FALLBACK ─────────────────────────────────────────────────────────────
 app.use((req, res) => {
   if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Not found' });
-  // Assessment pages served from assessment.html
+
+  // Explicit HTML routes — serve each file directly so static middleware never misses them
+  const routes = {
+    '/':                          'index.html',
+    '/index.html':                'index.html',
+    '/company/dashboard.html':    'company/dashboard.html',
+    '/applicant/dashboard.html':  'applicant/dashboard.html',
+    '/applicant/browse.html':     'applicant/browse.html',
+    '/applicant/resume-builder.html': 'applicant/resume-builder.html',
+  };
+
+  if (routes[req.path]) {
+    return res.sendFile(path.join(__dirname, 'public', routes[req.path]));
+  }
+
+  // Assessment token pages
   if (req.path.startsWith('/assessment/')) {
     return res.sendFile(path.join(__dirname, 'public', 'assessment.html'));
   }
+
+  // Default fallback
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 async function start() {
   await DB.connect();
-  app.listen(PORT, () => console.log(`🚀 NovaTalent → http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`🚀 Koynei → http://localhost:${PORT}`));
 }
 start().catch(err => { console.error('❌', err); process.exit(1); });
 module.exports = app;

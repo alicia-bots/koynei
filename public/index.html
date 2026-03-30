@@ -196,7 +196,7 @@ html[data-theme="light"] select option { background: var(--surface); color: var(
         <button class="btn-p" type="submit" id="l-btn"><span class="spin"></span>Sign in →</button>
       </form>
       <div class="divider">or</div>
-      <a class="btn-g" href="/applicant/browse.html">Browse jobs without an account</a>
+      <a class="btn-g" onclick="window.location.href='/applicant/browse.html';return false;" href="/applicant/browse.html">Browse jobs without an account</a>
       <div class="switch">No account? <a onclick="go('register')">Create one free</a></div>
     </div>
 
@@ -278,7 +278,9 @@ async function doReg(e) {
 const u=localStorage.getItem('token')?JSON.parse(localStorage.getItem('user')||'{}'):null;
 // Apply theme on load
 document.querySelectorAll('[data-theme-btn]').forEach(b=>{b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀':'☾'});
-if(u?.role) location.href=u.role==='company'?'/company/dashboard.html':'/applicant/dashboard.html';
+// Only auto-redirect if NOT coming from a deliberate visit (e.g. not if ?stay=1 or coming from browse)
+const skipRedirect = new URLSearchParams(location.search).get('stay') || document.referrer.includes('browse.html');
+if(u?.role && !skipRedirect) location.href=u.role==='company'?'/company/dashboard.html':'/applicant/dashboard.html';
 </script>
 </body>
 </html>
